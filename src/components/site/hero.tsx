@@ -33,7 +33,7 @@ export function Hero() {
         ))}
       </div>
       <div className="hero-skyline absolute inset-x-0 bottom-0 -z-10">
-        <MosqueSkyline className="h-44 w-full md:h-60" />
+        <MosqueSkyline className="h-48 w-full md:h-64 lg:h-80" />
       </div>
 
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 md:px-8 lg:grid-cols-2">
