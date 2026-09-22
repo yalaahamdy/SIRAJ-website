@@ -1,288 +1,262 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Camera, ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-const SHOT_COUNT = 10;
-
-const SHOTS: { title: string; subtitle: string; icon: string }[] = [
-  { title: "الرئيسية", subtitle: "لوحة المتابعة والأدوات", icon: "🏠" },
-  { title: "المصحف الشريف", subtitle: "تلاوة ترتيل احترافية", icon: "📖" },
-  { title: "التسميع الذكي", subtitle: "بدون إنترنت — أوفلاين", icon: "🎙️" },
-  { title: "مواقيت الصلاة", subtitle: "الأذان الشريف تلقائياً", icon: "🕌" },
-  { title: "بوصلة القبلة", subtitle: "اتجاه مكة بدقة عالية", icon: "🧭" },
-  { title: "حصن المسلم", subtitle: "أذكار وأدعية مصنّفة", icon: "🤲" },
-  { title: "حاسبة الزكاة", subtitle: "احسب زكاتك بدقة", icon: "💰" },
-  { title: "الأكاديمية", subtitle: "مسارات تعلم شرعية", icon: "🎓" },
-  { title: "السيرة النبوية", subtitle: "أحداث السيرة المطهرة", icon: "⭐" },
-  { title: "الإعدادات", subtitle: "تخصيص وتشخيص متقدم", icon: "⚙️" },
+/* ─── بيانات اللقطات ─────────────────────────────── */
+const SHOTS = [
+  { title: "الرئيسية",        icon: "🏠" },
+  { title: "المصحف الشريف",   icon: "📖" },
+  { title: "التسميع الذكي",   icon: "🎙️" },
+  { title: "مواقيت الصلاة",  icon: "🕌" },
+  { title: "بوصلة القبلة",   icon: "🧭" },
+  { title: "حصن المسلم",     icon: "🤲" },
+  { title: "حاسبة الزكاة",   icon: "💰" },
+  { title: "الأكاديمية",     icon: "🎓" },
+  { title: "السيرة النبوية", icon: "⭐" },
+  { title: "الإعدادات",      icon: "⚙️" },
 ];
 
+const N = SHOTS.length;
+const src = (i: number) => `screenshots/shot-${i + 1}.jpg`;
+
+/* ─── المكوّن الرئيسي ─────────────────────────────── */
 export function ScreenshotGallery() {
-  const [statuses, setStatuses] = useState<boolean[]>(() =>
-    Array(SHOT_COUNT).fill(true)
-  );
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const [lb, setLb]         = useState<number | null>(null); // lightbox index
 
+  /* إغلاق lightbox بـ Escape */
   useEffect(() => {
-    let cancelled = false;
-    Promise.all(
-      Array.from({ length: SHOT_COUNT }, (_, i) =>
-        fetch(`screenshots/shot-${i + 1}.jpg`, { method: "HEAD" })
-          .then((r) => r.ok)
-          .catch(() => false)
-      )
-    ).then((results) => {
-      if (!cancelled) setStatuses(results);
-    });
-    return () => { cancelled = true; };
-  }, []);
-
-  // تحديث الشريحة النشطة عند التمرير
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      const cardW = el.scrollWidth / SHOT_COUNT;
-      setActiveIdx(Math.round(el.scrollLeft / cardW));
+    if (lb === null) return;
+    const h = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLb(null);
+      if (e.key === "ArrowLeft")  setLb(p => p === null ? null : (p + 1) % N);
+      if (e.key === "ArrowRight") setLb(p => p === null ? null : (p - 1 + N) % N);
     };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [lb]);
 
-  const scrollTo = (idx: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardW = el.scrollWidth / SHOT_COUNT;
-    el.scrollTo({ left: cardW * idx, behavior: "smooth" });
-    setActiveIdx(idx);
-  };
+  const prev = useCallback(() => setActive(p => (p - 1 + N) % N), []);
+  const next = useCallback(() => setActive(p => (p + 1) % N), []);
 
-  const navigate = (dir: 1 | -1) => {
-    const next = Math.max(0, Math.min(SHOT_COUNT - 1, activeIdx + dir));
-    scrollTo(next);
-  };
-
-  const openLightbox = (idx: number) => {
-    if (statuses[idx]) setSelectedIdx(idx);
-  };
-
-  const navLightbox = (dir: 1 | -1) => {
-    if (selectedIdx === null) return;
-    const next = (selectedIdx + dir + SHOT_COUNT) % SHOT_COUNT;
-    setSelectedIdx(next);
-  };
+  /* تدوير تلقائي كل 3.5 ث */
+  useEffect(() => {
+    const t = setInterval(next, 3500);
+    return () => clearInterval(t);
+  }, [next]);
 
   return (
-    <div className="relative select-none">
-      {/* ===== الكاروسيل ===== */}
-      <div className="relative">
-        {/* أزرار التنقل */}
-        <button
-          onClick={() => navigate(-1)}
-          disabled={activeIdx === 0}
-          className="absolute left-0 top-1/2 z-20 -translate-y-1/2 -translate-x-2 hidden md:flex size-11 items-center justify-center rounded-full border border-brand-gold/30 bg-brand-ink/90 text-brand-gold shadow-lg backdrop-blur-sm transition hover:border-brand-gold/70 hover:bg-brand-ink disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="السابق"
-        >
-          <ChevronRight className="size-5" />
-        </button>
-        <button
-          onClick={() => navigate(1)}
-          disabled={activeIdx >= SHOT_COUNT - 1}
-          className="absolute right-0 top-1/2 z-20 -translate-y-1/2 translate-x-2 hidden md:flex size-11 items-center justify-center rounded-full border border-brand-gold/30 bg-brand-ink/90 text-brand-gold shadow-lg backdrop-blur-sm transition hover:border-brand-gold/70 hover:bg-brand-ink disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="التالي"
-        >
-          <ChevronLeft className="size-5" />
-        </button>
+    <div className="w-full" dir="rtl">
+      {/* ═══════════════════════════════════════════════
+          الشاشة الرئيسية المميزة (Featured Hero Shot)
+      ══════════════════════════════════════════════ */}
+      <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:gap-12">
 
-        {/* التلاشي الجانبي */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[var(--color-brand-ink,#050a12)] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[var(--color-brand-ink,#050a12)] to-transparent" />
+        {/* الهاتف الكبير في المنتصف */}
+        <div className="flex flex-col items-center gap-4 lg:order-2">
+          {/* إطار الهاتف */}
+          <div
+            className="relative"
+            style={{ width: 220 }}
+          >
+            {/* ظل ضوئي خلف الهاتف */}
+            <div
+              className="absolute inset-0 rounded-[2.5rem] blur-3xl opacity-40 -z-10"
+              style={{ background: "radial-gradient(ellipse, #d4af3780 0%, transparent 70%)" }}
+            />
 
-        {/* شريط التمرير */}
-        <div
-          ref={scrollRef}
-          className="flex gap-5 overflow-x-auto scroll-smooth pb-6 px-8 md:px-10"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {SHOTS.map((shot, idx) => {
-            const src = `screenshots/shot-${idx + 1}.jpg`;
-            const found = statuses[idx];
-            const isActive = idx === activeIdx;
+            {/* جسم الهاتف */}
+            <div
+              className="relative overflow-hidden rounded-[2.5rem] bg-[#0d1117]"
+              style={{
+                aspectRatio: "9 / 19.5",
+                boxShadow: "0 0 0 1.5px #ffffff18, 0 30px 80px #00000090, inset 0 0 0 1px #ffffff08",
+              }}
+            >
+              {/* شق الكاميرا */}
+              <div className="absolute top-0 left-1/2 z-20 -translate-x-1/2 mt-2 h-[14px] w-[52px] rounded-full bg-[#0d1117]" />
 
-            return (
+              {/* الصورة */}
+              {SHOTS.map((shot, i) => (
+                <img
+                  key={i}
+                  src={src(i)}
+                  alt={shot.title}
+                  onClick={() => setLb(i)}
+                  className="absolute inset-0 h-full w-full cursor-zoom-in object-cover transition-opacity duration-700"
+                  style={{ opacity: i === active ? 1 : 0 }}
+                  loading={i < 3 ? "eager" : "lazy"}
+                />
+              ))}
+
+              {/* طبقة hover للتكبير */}
               <div
-                key={idx}
-                onClick={() => { scrollTo(idx); openLightbox(idx); }}
-                className="group shrink-0 cursor-pointer"
-                style={{ width: "clamp(140px, 18vw, 190px)" }}
+                className="absolute inset-0 z-10 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-zoom-in"
+                onClick={() => setLb(active)}
+                style={{ background: "rgba(0,0,0,0.3)" }}
               >
-                {/* إطار الهاتف */}
-                <div
-                  className={`relative transition-all duration-500 ${
-                    isActive ? "scale-105 -translate-y-2" : "scale-100 translate-y-0"
-                  }`}
-                >
-                  {/* الإطار الخارجي للهاتف */}
-                  <div
-                    className="relative rounded-[2.2rem] border-2 border-brand-gold/40 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 shadow-2xl"
-                    style={{ aspectRatio: "9/19.5", padding: "3px" }}
-                  >
-                    {/* الشاشة الداخلية */}
-                    <div className="relative h-full w-full overflow-hidden rounded-[1.9rem] bg-brand-ink">
-                      {/* حافة الهاتف العلوية - الشق الديناميكي */}
-                      <div className="absolute top-0 left-1/2 z-10 -translate-x-1/2 h-5 w-16 rounded-b-full bg-slate-800" />
-
-                      {found ? (
-                        <>
-                          <img
-                            src={src}
-                            alt={`${shot.title} — سِراج`}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                          {/* طبقة التحويم */}
-                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-black/50 backdrop-blur-[2px]">
-                            <ZoomIn className="size-7 text-brand-gold drop-shadow" />
-                            <span className="text-[10px] font-bold text-brand-gold-light">
-                              اضغط للتكبير
-                            </span>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center">
-                          <Camera className="size-8 text-brand-gold/40" />
-                          <p className="font-amiri text-xs text-slate-500">{shot.title}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* توهج ذهبي نشط */}
-                    {isActive && (
-                      <div className="absolute inset-0 rounded-[2.2rem] ring-2 ring-brand-gold/60 ring-offset-2 ring-offset-brand-ink pointer-events-none" />
-                    )}
-                  </div>
-
-                  {/* ظل الهاتف الديناميكي */}
-                  <div
-                    className={`absolute -bottom-3 left-1/2 -translate-x-1/2 h-6 rounded-full bg-black/40 blur-md transition-all duration-500 ${
-                      isActive ? "w-3/4 opacity-80" : "w-1/2 opacity-40"
-                    }`}
-                  />
-                </div>
-
-                {/* معلومات الشاشة */}
-                <div className="mt-5 text-center px-1">
-                  <p
-                    className={`text-sm font-bold font-amiri transition-colors duration-300 ${
-                      isActive ? "text-brand-gold" : "text-slate-300 group-hover:text-brand-gold-light"
-                    }`}
-                  >
-                    <span className="ml-1">{shot.icon}</span>
-                    {shot.title}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-slate-500 leading-tight">
-                    {shot.subtitle}
-                  </p>
-                </div>
+                <span className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs text-white backdrop-blur-sm">
+                  اضغط للتكبير
+                </span>
               </div>
-            );
-          })}
+            </div>
+
+            {/* عنوان الشاشة */}
+            <div className="mt-4 text-center">
+              <p className="text-base font-bold text-white font-amiri">
+                {SHOTS[active].icon}&nbsp;{SHOTS[active].title}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {active + 1}&nbsp;/&nbsp;{N}
+              </p>
+            </div>
+          </div>
+
+          {/* أزرار التنقل */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={prev}
+              className="flex size-9 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white transition"
+              aria-label="السابق"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+
+            {/* نقاط */}
+            <div className="flex gap-1.5">
+              {SHOTS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActive(i)}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: i === active ? 20 : 6,
+                    height: 6,
+                    background: i === active ? "#d4af37" : "#ffffff22",
+                  }}
+                  aria-label={`شاشة ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={next}
+              className="flex size-9 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white transition"
+              aria-label="التالي"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* ═══════════════════════════════════════
+            الشريط الجانبي (5+5 مصغّرات)
+        ══════════════════════════════════════ */}
+        <div className="flex flex-row flex-wrap justify-center gap-3 lg:order-1 lg:w-[200px] lg:flex-col lg:flex-nowrap lg:justify-start">
+          {SHOTS.slice(0, 5).map((shot, i) => (
+            <ThumbCard key={i} idx={i} shot={shot} active={active} onClick={setActive} />
+          ))}
+        </div>
+
+        <div className="flex flex-row flex-wrap justify-center gap-3 lg:order-3 lg:w-[200px] lg:flex-col lg:flex-nowrap lg:justify-start">
+          {SHOTS.slice(5).map((shot, i) => (
+            <ThumbCard key={i + 5} idx={i + 5} shot={shot} active={active} onClick={setActive} />
+          ))}
         </div>
       </div>
 
-      {/* نقاط التتبع */}
-      <div className="mt-2 flex justify-center gap-1.5">
-        {SHOTS.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => scrollTo(idx)}
-            className={`rounded-full transition-all duration-300 ${
-              idx === activeIdx
-                ? "w-6 h-2 bg-brand-gold"
-                : "w-2 h-2 bg-slate-600 hover:bg-slate-400"
-            }`}
-            aria-label={`انتقل إلى شاشة ${idx + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* نص أسفل */}
-      <p className="mt-5 text-center text-xs leading-6 text-slate-500">
-        ✨ لقطات حقيقية من شاشة الهاتف — تطبيق سِراج v0.3.26
-        <span className="mx-2 text-brand-gold/30">|</span>
-        اضغط على أي شاشة لاستعراضها بحجمها الكامل
-      </p>
-
-      {/* ===== Lightbox ===== */}
-      {selectedIdx !== null && (
+      {/* ═══════════════════════════
+          Lightbox
+      ══════════════════════════ */}
+      {lb !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/92 backdrop-blur-lg animate-in fade-in duration-200"
-          onClick={() => setSelectedIdx(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl"
+          onClick={() => setLb(null)}
         >
-          {/* زر الإغلاق */}
+          {/* إغلاق */}
           <button
-            onClick={() => setSelectedIdx(null)}
-            className="absolute top-5 right-5 flex size-11 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition z-10"
-            aria-label="إغلاق"
+            onClick={() => setLb(null)}
+            className="absolute top-4 right-4 z-10 flex size-10 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition"
           >
             <X className="size-5" />
           </button>
 
-          {/* زر السابق */}
+          {/* السابق */}
           <button
-            onClick={(e) => { e.stopPropagation(); navLightbox(-1); }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 flex size-12 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition z-10"
-            aria-label="السابق"
+            onClick={e => { e.stopPropagation(); setLb(p => p === null ? null : (p - 1 + N) % N); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex size-11 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition"
           >
-            <ChevronRight className="size-6" />
+            <ChevronLeft className="size-5" />
           </button>
 
-          {/* زر التالي */}
+          {/* التالي */}
           <button
-            onClick={(e) => { e.stopPropagation(); navLightbox(1); }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 flex size-12 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition z-10"
-            aria-label="التالي"
+            onClick={e => { e.stopPropagation(); setLb(p => p === null ? null : (p + 1) % N); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex size-11 items-center justify-center rounded-full bg-white/10 text-white border border-white/20 hover:bg-white/20 transition"
           >
-            <ChevronLeft className="size-6" />
+            <ChevronRight className="size-5" />
           </button>
 
           {/* الصورة */}
           <div
-            className="relative flex flex-col items-center gap-4 p-4 max-h-screen"
-            onClick={(e) => e.stopPropagation()}
+            className="relative flex flex-col items-center gap-3"
+            onClick={e => e.stopPropagation()}
           >
-            {/* إطار هاتف فاخر */}
-            <div
-              className="relative rounded-[2.8rem] border-4 border-slate-600 bg-slate-900 shadow-[0_0_80px_rgba(212,175,55,0.3)] overflow-hidden"
-              style={{ maxHeight: "78vh", aspectRatio: "9/19.5" }}
-            >
-              <img
-                src={`screenshots/shot-${selectedIdx + 1}.jpg`}
-                alt={SHOTS[selectedIdx]?.title}
-                className="h-full w-full object-cover"
-                style={{ maxHeight: "78vh" }}
-              />
-            </div>
-
-            {/* عنوان الشاشة */}
-            <div className="text-center">
-              <p className="text-lg font-bold font-amiri text-brand-gold">
-                {SHOTS[selectedIdx]?.icon} {SHOTS[selectedIdx]?.title}
-              </p>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {SHOTS[selectedIdx]?.subtitle}
-              </p>
-              {/* مؤشر الرقم */}
-              <p className="text-xs text-slate-600 mt-1">
-                {selectedIdx + 1} / {SHOT_COUNT}
-              </p>
-            </div>
+            <img
+              src={src(lb)}
+              alt={SHOTS[lb].title}
+              className="rounded-3xl object-contain shadow-2xl"
+              style={{ maxHeight: "82vh", maxWidth: "90vw" }}
+            />
+            <p className="text-sm font-bold text-brand-gold font-amiri">
+              {SHOTS[lb].icon}&nbsp;{SHOTS[lb].title}
+              <span className="ml-2 text-slate-500 font-normal text-xs">
+                {lb + 1} / {N}
+              </span>
+            </p>
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+/* ─── بطاقة مصغّرة ─────────────────────────────────── */
+function ThumbCard({
+  idx, shot, active, onClick,
+}: {
+  idx: number;
+  shot: { title: string; icon: string };
+  active: number;
+  onClick: (i: number) => void;
+}) {
+  const isActive = idx === active;
+  return (
+    <button
+      onClick={() => onClick(idx)}
+      className="group relative shrink-0 overflow-hidden rounded-2xl transition-all duration-300"
+      style={{
+        width: 68,
+        aspectRatio: "9/19.5",
+        outline: isActive ? "2px solid #d4af37" : "2px solid transparent",
+        outlineOffset: 2,
+        opacity: isActive ? 1 : 0.55,
+        transform: isActive ? "scale(1.08)" : "scale(1)",
+      }}
+      aria-label={shot.title}
+    >
+      <img
+        src={`screenshots/shot-${idx + 1}.jpg`}
+        alt={shot.title}
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
+      {/* تدرج أسفل البطاقة */}
+      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-black/80 to-transparent" />
+      <span className="absolute bottom-1 left-0 right-0 text-center text-[8px] font-bold text-white/80 leading-tight px-0.5 truncate">
+        {shot.title}
+      </span>
+    </button>
   );
 }
