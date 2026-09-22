@@ -1,0 +1,414 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ============================================================
+   SIRAJ (سِراج) — Brand theme extracted from the app itself
+   App palette: lib/shell/theme/app_colors.dart
+   ============================================================ */
+@theme {
+  --color-brand-green: #0f5132;
+  --color-brand-green-light: #198754;
+  --color-brand-green-deep: #0a3622;
+  --color-brand-gold: #d4af37;
+  --color-brand-gold-light: #e5c158;
+  --color-brand-night: #0b1526;
+  --color-brand-ink: #070d18;
+  --color-brand-surface: #141d2b;
+  --color-brand-sand: #f4f8f5;
+  --color-brand-sacred: #17241c;
+  --font-amiri: "Amiri", "Times New Roman", serif;
+  --font-tajawal: "Tajawal", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-quran: "Scheherazade New", "Amiri", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+html.light {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-tajawal);
+  background: #070d18;
+}
+html.light body {
+  background: #f6f7f3;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: #fff;
+}
+
+/* ---------- Decorative helpers ---------- */
+.pattern-stars {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23D4AF37' stroke-opacity='0.08'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3Ccircle cx='28' cy='28' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+.pattern-stars-soft {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23D4AF37' stroke-opacity='0.05'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.gold-text {
+  background: linear-gradient(120deg, #f3dfa2 0%, #d4af37 38%, #f8ecc9 55%, #b8912c 78%, #e5c158 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-btn {
+  background: linear-gradient(135deg, #e8cf7a 0%, #d4af37 45%, #b8912c 100%);
+  color: #1a1405;
+  box-shadow: 0 8px 28px -8px rgba(212, 175, 55, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.gold-btn:hover {
+  filter: brightness(1.07);
+}
+
+.glass-card {
+  background: linear-gradient(160deg, rgba(30, 42, 62, 0.55), rgba(11, 21, 38, 0.75));
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  backdrop-filter: blur(10px);
+}
+.glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.sacred-frame {
+  background: linear-gradient(150deg, #17241c 0%, #0e1a13 100%);
+  border: 1px solid rgba(195, 217, 201, 0.18);
+}
+
+/* ---------- Animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .float-slow,
+  .float-slower,
+  .twinkle,
+  .marquee-track,
+  .bob,
+  .spin-slow {
+    animation: none !important;
+  }
+}
+@keyframes siraj-fade-up {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.float-slow { animation: float-slow 6s ease-in-out infinite; }
+.float-slower { animation: float-slow 8s ease-in-out infinite; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.9; }
+}
+.twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+
+@keyframes marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-rtl var(--marquee-duration, 46s) linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.35); }
+  70% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+.pulse-ring { animation: pulse-ring 2.6s ease-out infinite; }
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin-slow 22s linear infinite; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(7px); }
+}
+.bob { animation: bob 1.8s ease-in-out infinite; }
+
+/* ---------- Theme: professional light mode (palette from the app itself:
+   AppColors.backgroundLight #F8F9FA / textPrimaryLight #1E2125 /
+   textSecondaryLight #6C757D / borderLight #DEE2E6 — app_colors.dart) ---------- */
+html.light {
+  /* Remap the neutral utilities the site is built with (Tailwind v4 theme vars).
+     text-white / text-slate-* become deep inks, white overlays become ink tints. */
+  --color-white: #1e2125;
+  --color-slate-200: #2c3440;
+  --color-slate-300: #3a4350;
+  --color-slate-400: #566171;
+  --color-slate-500: #66707d;
+  --color-emerald-100: #14532d;
+  --color-emerald-200: #15803d;
+  --color-emerald-300: #166534;
+  /* readable gold for text on light surfaces (decorative gold stays #D4AF37) */
+  --color-brand-gold-light: #8f6e14;
+}
+
+/* Areas that intentionally keep the app's dark look in both themes:
+   phone mockups (they depict the real app), footer, premium dark banners. */
+.light .keep-dark,
+.light .phone-screen {
+  --color-white: #ffffff;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-brand-gold-light: #e5c158;
+}
+
+html.light .glass-card {
+  background: linear-gradient(165deg, #ffffff 0%, #fbfaf3 100%);
+  border: 1px solid rgba(143, 110, 20, 0.16);
+  box-shadow: 0 20px 45px -28px rgba(30, 33, 37, 0.25);
+  backdrop-filter: none;
+}
+html.light .glass-card:hover {
+  border-color: rgba(184, 145, 44, 0.45);
+}
+
+/* navbar shells */
+.nav-shell {
+  background: rgba(7, 13, 24, 0.9);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 40px -20px rgba(0, 0, 0, 0.9);
+}
+html.light .nav-shell {
+  background: rgba(252, 250, 244, 0.9);
+  border-bottom: 1px solid rgba(184, 145, 44, 0.22);
+  box-shadow: 0 12px 40px -26px rgba(30, 33, 37, 0.3);
+}
+.nav-panel {
+  background: rgba(7, 13, 24, 0.96);
+  backdrop-filter: blur(18px);
+}
+html.light .nav-panel {
+  background: rgba(252, 250, 244, 0.97);
+}
+
+/* hero sky + skyline silhouette */
+.hero-backdrop {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(15, 81, 50, 0.55), transparent 60%),
+    radial-gradient(900px 500px at 10% 10%, rgba(11, 21, 38, 0.9), transparent 55%),
+    linear-gradient(180deg, #0b1526 0%, #070d18 70%);
+}
+html.light .hero-backdrop {
+  background:
+    radial-gradient(1100px 560px at 82% -8%, rgba(25, 135, 84, 0.16), transparent 62%),
+    radial-gradient(900px 500px at 8% 6%, rgba(212, 175, 55, 0.16), transparent 55%),
+    linear-gradient(180deg, #fdfbf3 0%, #f2f5ef 78%);
+}
+.hero-skyline {
+  color: #050a12;
+}
+html.light .hero-skyline {
+  color: #0f5132;
+}
+html.light .twinkle {
+  animation: none;
+  opacity: 0.35;
+}
+
+/* marquee edge fades follow the page background */
+.fade-edge-l {
+  background: linear-gradient(to right, #070d18, transparent);
+}
+.fade-edge-r {
+  background: linear-gradient(to left, #070d18, transparent);
+}
+html.light .fade-edge-l {
+  background: linear-gradient(to right, #f6f7f3, transparent);
+}
+html.light .fade-edge-r {
+  background: linear-gradient(to left, #f6f7f3, transparent);
+}
+
+/* ---------- Phone frame ---------- */
+.phone-frame {
+  position: relative;
+  width: min(356px, 88vw);
+  aspect-ratio: 9 / 19.2;
+  border-radius: 2.6rem;
+  background: linear-gradient(160deg, #2a3648, #0d1420 60%);
+  padding: 10px;
+  box-shadow: 0 30px 70px -22px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(212, 175, 55, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 2.1rem;
+  overflow: hidden;
+  background: #10141c;
+}
+.phone-notch {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 30;
+}
+
+/* no-scroll utility for mock screens */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom scrollbar (light contexts) */
+.fancy-scroll::-webkit-scrollbar { width: 8px; }
+.fancy-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); }
+.fancy-scroll::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 8px; }
