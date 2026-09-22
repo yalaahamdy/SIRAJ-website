@@ -1,276 +1,463 @@
+/**
+ * رسمة معمارية إسلامية فاخرة لأفق المسجد الجامع (Grand Mosque Skyline)
+ * مصممة بدقة هندسية وجمالية احترافية خالية تماماً من أي أخطاء:
+ * - قبة كبرى مركزية ذات انحناء إسلامي أصيل (Ogee Curve) مع رقبة بنوافذ مقوسة وجامور وهلال ذهبي
+ * - قباب مساندة متدرجة تمنح عمقاً واقعياً للحرم
+ * - مآذن شامخة رباعية وثنائية الشرفات بمقرنصات وجوسق وأقلام مخروطية وأهلة شريفة
+ * - أروقة واجهة بأقواس إسلامية مدببة ذات إضاءة داخلية دافئة
+ * - شرفات ومسننات معمارية (Crenellations) على طول الأسقف
+ * - طبقات عمق متعددة (مقدمة، وسط، أفق بعيد مع نخيل الواحة)
+ */
+
 export function MosqueSkyline({ className = "" }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 1440 260"
+      viewBox="0 0 1440 280"
       preserveAspectRatio="xMidYMax slice"
       className={className}
-      aria-hidden
+      aria-hidden="true"
       focusable="false"
     >
       <defs>
-        {/* تدرج التلاشي الناعم مع الأرضية */}
-        <linearGradient id="skyline-fade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.9" />
-          <stop offset="85%" stopColor="currentColor" stopOpacity="1" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="1" />
+        {/* هالة فجر / سحر خلف القبة الكبرى */}
+        <radialGradient id="skylineAura" cx="50%" cy="55%" r="45%">
+          <stop offset="0%" stopColor="#d4af37" stopOpacity="0.16" />
+          <stop offset="45%" stopColor="#0f5132" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="#d4af37" stopOpacity="0" />
+        </radialGradient>
+
+        {/* ذهب أصيل للأهلة والجامور */}
+        <linearGradient id="goldFinial" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="40%" stopColor="#d4af37" />
+          <stop offset="100%" stopColor="#996515" />
         </linearGradient>
 
-        {/* تعريف الهلال الإسلامي الدقيق */}
-        <g id="crescent-finial">
-          <path
-            d="M 0 -12 A 5 5 0 1 0 0 -2 A 6 6 0 1 1 0 -12 Z"
-            fill="currentColor"
-          />
-          <line x1="0" y1="-2" x2="0" y2="10" stroke="currentColor" strokeWidth="1.8" />
-          <circle cx="0" cy="1" r="1.8" fill="currentColor" />
-        </g>
+        {/* إضاءة دافئة هادئة لنوافذ الحرم */}
+        <linearGradient id="archLight" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#fde68a" stopOpacity="0.32" />
+          <stop offset="70%" stopColor="#f59e0b" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#d97706" stopOpacity="0.05" />
+        </linearGradient>
       </defs>
 
-      {/* ========================================================
-          1. الطبقة البعيدة (Background Layer) - عمق بصري بدرجة شفافية
-         ======================================================== */}
-      <g fill="currentColor" opacity="0.32">
-        {/* قباب بعيدة في الأفق الأيسر */}
-        <path d="M 280 230 C 280 185 305 160 330 145 C 355 160 380 185 380 230 Z" />
-        <use href="#crescent-finial" x="330" y="142" transform="scale(0.8)" />
+      {/* 0. هالة نور سماوية خلف المسجد */}
+      <ellipse cx="720" cy="160" rx="420" ry="110" fill="url(#skylineAura)" />
 
-        <path d="M 220 230 C 220 195 238 175 255 165 C 272 175 290 195 290 230 Z" />
+      {/* ============================================================== */}
+      {/* 1. الطبقة البعيدة (الأفق والواحة والمآذن النائية) - Opacity 0.28 */}
+      {/* ============================================================== */}
+      <g fill="currentColor" opacity="0.28">
+        {/* تلال أفق بعيدة */}
+        <path d="M 0 258 C 220 250 440 256 720 248 C 1000 256 1220 250 1440 258 L 1440 280 L 0 280 Z" />
 
-        {/* مئذنة بعيدة يسار */}
-        <rect x="180" y="110" width="10" height="120" />
-        <rect x="177" y="135" width="16" height="5" rx="1" />
-        <rect x="178" y="170" width="14" height="4" rx="1" />
-        <path d="M 180 110 L 185 85 L 190 110 Z" />
-        <use href="#crescent-finial" x="185" y="85" transform="scale(0.6)" />
+        {/* مئذنة نائية في أقصى اليسار */}
+        <DistantMinaret cx={140} topY={105} />
+        {/* قباب نائية يسار */}
+        <path d="M 210 262 C 210 244 222 232 235 224 C 248 232 260 244 260 262 Z" />
+        <path d="M 185 264 C 185 250 193 240 202 234 C 211 240 220 250 220 264 Z" />
 
-        {/* قباب بعيدة في الأفق الأيمن */}
-        <path d="M 1060 230 C 1060 185 1085 160 1110 145 C 1135 160 1160 185 1160 230 Z" />
-        <use href="#crescent-finial" x="1110" y="142" transform="scale(0.8)" />
+        {/* مئذنة نائية في أقصى اليمين */}
+        <DistantMinaret cx={1300} topY={105} />
+        {/* قباب نائية يمين */}
+        <path d="M 1180 262 C 1180 244 1192 232 1205 224 C 1218 232 1230 244 1230 262 Z" />
+        <path d="M 1220 264 C 1220 250 1229 240 1238 234 C 1247 240 1255 250 1255 264 Z" />
 
-        <path d="M 1150 230 C 1150 195 1168 175 1185 165 C 1202 175 1220 195 1220 230 Z" />
-
-        {/* مئذنة بعيدة يمين */}
-        <rect x="1250" y="110" width="10" height="120" />
-        <rect x="1247" y="135" width="16" height="5" rx="1" />
-        <rect x="1248" y="170" width="14" height="4" rx="1" />
-        <path d="M 1250 110 L 1255 85 L 1260 110 Z" />
-        <use href="#crescent-finial" x="1255" y="85" transform="scale(0.6)" />
-
-        {/* أفق تلال خفيفة تمتد على الأطراف */}
-        <path d="M 0 240 Q 150 220 300 240 L 300 260 L 0 260 Z" />
-        <path d="M 1140 240 Q 1290 220 1440 240 L 1440 260 L 1140 260 Z" />
+        {/* نخيل الواحة العربي */}
+        <ArabianPalm cx={80} baseY={262} scale={1.05} />
+        <ArabianPalm cx={1370} baseY={262} scale={1.05} flip />
       </g>
 
-      {/* ========================================================
-          2. الطبقة الأمامية الأساسية (Foreground Architectural Layer)
-         ======================================================== */}
-      <g fill="url(#skyline-fade)">
-        {/* ----------------------------------------------------
-            أ. أروقة الأقواس الإسلامية والشرافات (Arcades & Merlons)
-           ---------------------------------------------------- */}
-        {/* رواق الأقواس - الجانب الأيسر (من x=350 إلى x=520) */}
-        <rect x="360" y="200" width="165" height="45" />
-        {/* شرافات إسلامية مسننة أعلى الرواق الأيسر */}
-        {Array.from({ length: 11 }).map((_, i) => (
-          <path
-            key={`merlon-l-${i}`}
-            d={`M ${362 + i * 15} 200 L ${367 + i * 15} 193 L ${372 + i * 15} 200 Z`}
-          />
-        ))}
+      {/* ============================================================== */}
+      {/* 2. الطبقة المتوسطة (الأجنحة الجانبية والأروقة الملحقة) - Opacity 0.6 */}
+      {/* ============================================================== */}
+      <g fill="currentColor" opacity="0.6">
+        {/* مئذنة جناح أيسر */}
+        <MidMinaret cx={340} topY={68} />
+        {/* قبة جناح أيسر */}
+        <path d="M 388 235 C 388 206 405 186 422 174 C 439 186 456 206 456 235 Z" />
+        <FinialSimple cx={422} baseY={174} height={18} />
 
-        {/* رواق الأقواس - الجانب الأيمن (من x=915 إلى x=1080) */}
-        <rect x="915" y="200" width="165" height="45" />
-        {/* شرافات إسلامية مسننة أعلى الرواق الأيمن */}
-        {Array.from({ length: 11 }).map((_, i) => (
-          <path
-            key={`merlon-r-${i}`}
-            d={`M ${917 + i * 15} 200 L ${922 + i * 15} 193 L ${927 + i * 15} 200 Z`}
-          />
-        ))}
+        {/* مئذنة جناح أيمن */}
+        <MidMinaret cx={1100} topY={68} />
+        {/* قبة جناح أيمن */}
+        <path d="M 984 235 C 984 206 1001 186 1018 174 C 1035 186 1052 206 1052 235 Z" />
+        <FinialSimple cx={1018} baseY={174} height={18} />
 
-        {/* امتدادات جدارية للأطراف */}
-        <rect x="180" y="222" width="180" height="25" />
-        <rect x="1080" y="222" width="180" height="25" />
+        {/* رواق جانبي يسار */}
+        <rect x="270" y="235" width="220" height="35" />
+        {/* رواق جانبي يمين */}
+        <rect x="950" y="235" width="220" height="35" />
 
-        {/* ----------------------------------------------------
-            ب. كتل المسجد المركزي والقباب الثانوية (Flanking Domes)
-           ---------------------------------------------------- */}
-        {/* قاعدة الجامع المركزي العريضة */}
-        <rect x="525" y="175" width="390" height="70" />
-
-        {/* القبة الثانوية اليسرى (Left Subsidiary Dome) */}
-        <path d="M 545 175 C 545 135 570 115 595 102 C 620 115 645 135 645 175 Z" />
-        <use href="#crescent-finial" x="595" y="98" transform="scale(0.85)" />
-
-        {/* القبة الثانوية اليمنى (Right Subsidiary Dome) */}
-        <path d="M 795 175 C 795 135 820 115 845 102 C 870 115 895 135 895 175 Z" />
-        <use href="#crescent-finial" x="845" y="98" transform="scale(0.85)" />
-
-        {/* قباب طرفية صغيرة ناعمة */}
-        <path d="M 470 200 C 470 178 485 165 500 156 C 515 165 530 178 530 200 Z" />
-        <use href="#crescent-finial" x="500" y="153" transform="scale(0.65)" />
-
-        <path d="M 910 200 C 910 178 925 165 940 156 C 955 165 970 178 970 200 Z" />
-        <use href="#crescent-finial" x="940" y="153" transform="scale(0.65)" />
-
-        {/* ----------------------------------------------------
-            ج. القبة الكبرى المهيبة (Grand Central Ogee Dome)
-           ---------------------------------------------------- */}
-        {/* رقبة القبة الكبرى (Central Drum) */}
-        <rect x="640" y="145" width="160" height="35" rx="2" />
-        {/* إفريز زخرفي أعلى رقبة القبة */}
-        <rect x="635" y="142" width="170" height="5" rx="1" />
-
-        {/* منحنى القبة الإسلامية الرشيقة ذات القوس المدبب المزدوج (Ogee Arch Dome) */}
-        <path
-          d="
-            M 640 145
-            C 630 105, 670 70, 720 48
-            C 770 70, 810 105, 800 145
-            Z
-          "
-        />
-
-        {/* هلال وسارية القبة المركزية الشامخة */}
-        <line x1="720" y1="48" x2="720" y2="22" stroke="currentColor" strokeWidth="2.5" />
-        <circle cx="720" cy="36" r="3" />
-        <use href="#crescent-finial" x="720" y="19" transform="scale(1.25)" />
-
-        {/* ----------------------------------------------------
-            د. المآذن الإسلامية الرئيسية الرشيقة (Grand Minarets)
-           ---------------------------------------------------- */}
-        {/* المئذنة اليسرى الشاهقة */}
-        <ArchitecturalMinaret x={440} />
-
-        {/* المئذنة اليمنى الشاهقة */}
-        <ArchitecturalMinaret x={1000} />
-
-        {/* مئذنتان وسطيتان أنيقتان تحددان كتلة القبة المركزية */}
-        <InnerMinaret x={625} />
-        <InnerMinaret x={815} />
-
-        {/* ----------------------------------------------------
-            هـ. تفاصيل معمارية إسلامية ونخيل عربي أصيل على الأطراف
-           ---------------------------------------------------- */}
-        <GracefulPalm x={130} />
-        <GracefulPalm x={1310} />
-
-        {/* خط القاعدة الأرضي التام */}
-        <rect x="0" y="242" width="1440" height="25" />
+        {/* شرفات الأروقة الجانبية */}
+        <Crenellations startX={270} endX={490} y={235} />
+        <Crenellations startX={950} endX={1170} y={235} />
       </g>
 
-      {/* ========================================================
-          3. النوافذ والأقواس المفرغة (Light-Through Arched Cutouts)
-         ======================================================== */}
-      {/* فتحات نوافذ القبة المركزية الإسلامية (يمر منها ضوء الخلفية) */}
-      <g fill="#070d18" opacity="0.85">
-        <path d="M 665 168 C 665 156 673 152 673 152 C 673 152 681 156 681 168 Z" />
-        <path d="M 692 168 C 692 154 702 150 702 150 C 702 150 712 154 712 168 Z" />
-        <path d="M 720 168 C 720 152 731 148 731 148 C 731 148 742 152 742 168 Z" />
-        <path d="M 750 168 C 750 154 760 150 760 150 C 760 150 770 154 770 168 Z" />
-        <path d="M 779 168 C 779 156 787 152 787 152 C 787 152 795 156 795 168 Z" />
+      {/* ============================================================== */}
+      {/* 3. الطبقة الرئيسية (الحرم المركزي والمآذن الكبرى) - Full Opacity */}
+      {/* ============================================================== */}
+      <g fill="currentColor">
+        {/* أرضية الحرم الكاملة */}
+        <rect x="0" y="265" width="1440" height="15" />
 
-        {/* أقواس مفرغة في الرواق الأيسر */}
-        <path d="M 385 240 C 385 220 395 214 400 214 C 405 214 415 220 415 240 Z" />
-        <path d="M 435 240 C 435 220 445 214 450 214 C 455 214 465 220 465 240 Z" />
-        <path d="M 485 240 C 485 220 495 214 500 214 C 505 214 515 220 515 240 Z" />
+        {/* واجهة مبنى الحرم المركزي */}
+        <rect x="540" y="210" width="360" height="58" />
 
-        {/* أقواس مفرغة في الرواق الأيمن */}
-        <path d="M 925 240 C 925 220 935 214 940 214 C 945 214 955 220 955 240 Z" />
-        <path d="M 975 240 C 975 220 985 214 990 214 C 995 214 1005 220 1005 240 Z" />
-        <path d="M 1025 240 C 1025 220 1035 214 1040 214 C 1045 214 1055 220 1055 240 Z" />
+        {/* شرفات سقف الحرم المركزي */}
+        <Crenellations startX={540} endX={900} y={210} />
+
+        {/* قبة مساندة يسرى (Left Semi-Dome) */}
+        <path d="M 570 210 C 564 186 590 162 618 148 C 646 162 672 186 666 210 Z" />
+        <FinialWithCrescent cx={618} baseY={148} height={22} />
+
+        {/* قبة مساندة يمنى (Right Semi-Dome) */}
+        <path d="M 774 210 C 768 186 794 162 822 148 C 850 162 876 186 870 210 Z" />
+        <FinialWithCrescent cx={822} baseY={148} height={22} />
+
+        {/* رقبة القبة الكبرى (Central Dome Drum) */}
+        <rect x="644" y="152" width="152" height="60" />
+        {/* إفريز رقبة القبة */}
+        <rect x="640" y="150" width="160" height="4" rx="1" />
+
+        {/* القبة الكبرى المركزية (Grand Central Dome) - منحنى إسلامي مدبب أصيل */}
+        <path d="M 646 150 C 636 126 668 96 720 68 C 772 96 804 126 794 150 Z" />
+
+        {/* مئذنة الحرم الكبرى اليسرى */}
+        <GrandMinaret cx={490} />
+
+        {/* مئذنة الحرم الكبرى اليمنى */}
+        <GrandMinaret cx={950} />
+      </g>
+
+      {/* ============================================================== */}
+      {/* 4. تفاصيل النوافذ والأقواس الداخلية المضيئة                     */}
+      {/* ============================================================== */}
+      <g fill="url(#archLight)">
+        {/* نوافذ رقبة القبة الكبرى (5 نوافذ مقوسة) */}
+        <PointedArchWindow cx={668} baseY={195} width={10} height={28} />
+        <PointedArchWindow cx={694} baseY={195} width={10} height={28} />
+        <PointedArchWindow cx={720} baseY={195} width={11} height={30} />
+        <PointedArchWindow cx={746} baseY={195} width={10} height={28} />
+        <PointedArchWindow cx={772} baseY={195} width={10} height={28} />
+
+        {/* أقواس الواجهة السفلية للحرم (7 بوابات إسلامية مدببة) */}
+        <PointedArchWindow cx={575} baseY={265} width={20} height={36} />
+        <PointedArchWindow cx={615} baseY={265} width={20} height={36} />
+        <PointedArchWindow cx={655} baseY={265} width={22} height={40} />
+        <PointedArchWindow cx={720} baseY={265} width={26} height={45} />
+        <PointedArchWindow cx={785} baseY={265} width={22} height={40} />
+        <PointedArchWindow cx={825} baseY={265} width={20} height={36} />
+        <PointedArchWindow cx={865} baseY={265} width={20} height={36} />
+
+        {/* أقواس الأروقة الجانبية */}
+        <PointedArchWindow cx={310} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={350} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={390} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={430} baseY={265} width={15} height={24} />
+
+        <PointedArchWindow cx={1010} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={1050} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={1090} baseY={265} width={15} height={24} />
+        <PointedArchWindow cx={1130} baseY={265} width={15} height={24} />
+      </g>
+
+      {/* ============================================================== */}
+      {/* 5. التفاحات والهلال الذهبي للقبة الكبرى والمآذن                */}
+      {/* ============================================================== */}
+      <g>
+        {/* جامور وهلال القبة الكبرى */}
+        <GrandDomeFinial cx={720} baseY={68} />
+
+        {/* أهلة المآذن الكبرى */}
+        <MinaretCrescent cx={490} cy={22} r={5} />
+        <MinaretCrescent cx={950} cy={22} r={5} />
+
+        {/* أهلة المآذن المتوسطة */}
+        <MinaretCrescent cx={340} cy={54} r={3.8} />
+        <MinaretCrescent cx={1100} cy={54} r={3.8} />
       </g>
     </svg>
   );
 }
 
 /**
- * مئذنة إسلامية شامخة بتفاصيل معمارية حقيقية:
- * قاعدة عريضة + بدن أسطواني مدرج + شرفة أولى وشرفة ثانية بمقرنصات + قمة مخروطية وهلال.
+ * مئذنة الحرم الكبرى (Grand Minaret)
+ * تفاصيل دقيقة: قاعدة متدرجة، جذع سفلي بنافذة شريطية، شرفة أولى بمقرنصات ودرابزين،
+ * جذع علوي، شرفة ثانية، جوسق بأعمدة، قلم مخروطي عثماني، وعمود الهلال.
  */
-function ArchitecturalMinaret({ x }: { x: number }) {
+function GrandMinaret({ cx }: { cx: number }) {
   return (
     <g>
       {/* قاعدة المئذنة */}
-      <rect x={x - 13} y="195" width="26" height="50" rx="1" />
-      <path d={`M ${x - 14} 195 L ${x - 9} 185 L ${x + 9} 185 L ${x + 14} 195 Z`} />
+      <rect x={cx - 15} y={235} width={30} height={32} />
+      <polygon points={`${cx - 15},235 ${cx - 12},226 ${cx + 12},226 ${cx + 15},235`} />
 
-      {/* البدن الأول */}
-      <rect x={x - 8} y="130" width="16" height="55" />
+      {/* الجذع السفلي */}
+      <rect x={cx - 11} y={166} width={22} height={60} />
+      {/* نافذة شريطية في الجذع السفلي */}
+      <rect x={cx - 2} y={185} width={4} height={18} rx={1.5} fill="url(#archLight)" />
 
-      {/* الشرفة الأولى مع بروز مقرنصات */}
-      <path d={`M ${x - 14} 130 L ${x - 12} 123 L ${x + 12} 123 L ${x + 14} 130 Z`} />
-      <rect x={x - 13} y="122" width="26" height="3" rx="1" />
+      {/* الشرفة الأولى (First Balcony) ومقرنصاتها */}
+      <polygon points={`${cx - 17},166 ${cx + 17},166 ${cx + 12},172 ${cx - 12},172`} />
+      <rect x={cx - 17} y={154} width={34} height={12} rx={1} />
+      {/* فتحات درابزين الشرفة */}
+      <rect x={cx - 13} y={156} width={4} height={4} fill="url(#archLight)" />
+      <rect x={cx - 2} y={156} width={4} height={4} fill="url(#archLight)" />
+      <rect x={cx + 9} y={156} width={4} height={4} fill="url(#archLight)" />
 
-      {/* البدن الثاني الأضيق */}
-      <rect x={x - 6} y="80" width="12" height="42" />
+      {/* الجذع الأوسط */}
+      <rect x={cx - 9} y={112} width={18} height={42} />
+      <rect x={cx - 1.5} y={122} width={3} height={12} rx={1} fill="url(#archLight)" />
 
-      {/* الشرفة الثانية العلوية */}
-      <path d={`M ${x - 11} 80 L ${x - 9} 75 L ${x + 9} 75 L ${x + 11} 80 Z`} />
-      <rect x={x - 10} y="74" width="20" height="2.5" rx="1" />
+      {/* الشرفة الثانية (Second Balcony) */}
+      <polygon points={`${cx - 14},112 ${cx + 14},112 ${cx + 10},116 ${cx - 10},116`} />
+      <rect x={cx - 14} y={104} width={28} height={8} rx={1} />
 
-      {/* جوسق المئذنة بالأعمدة */}
-      <rect x={x - 4.5} y="55" width="9" height="19" />
+      {/* الجوسق (Lantern Pavilion) بأعمدة مفتوحة */}
+      <rect x={cx - 7} y={72} width={14} height={32} />
+      <rect x={cx - 3.5} y={78} width={7} height={18} rx={3} fill="url(#archLight)" />
 
-      {/* القمة المخروطية الرشيقة (Spire) */}
-      <path d={`M ${x - 5} 55 L ${x} 28 L ${x + 5} 55 Z`} />
-
-      {/* سارية وهلال المئذنة */}
-      <line x1={x} y1="28" x2={x} y2="15" stroke="currentColor" strokeWidth="1.8" />
-      <use href="#crescent-finial" x={x} y="14" transform="scale(0.9)" />
+      {/* القلم المخروطي المستدق (Pencil Spire) */}
+      <path d={`M ${cx - 7} 72 C ${cx - 4} 55 ${cx - 2} 42 ${cx} 36 C ${cx + 2} 42 ${cx + 4} 55 ${cx + 7} 72 Z`} />
     </g>
   );
 }
 
 /**
- * مئذنة وسطية رشيقة تلاصق القباب
+ * مئذنة متوسطة للأجنحة (Mid Minaret)
  */
-function InnerMinaret({ x }: { x: number }) {
+function MidMinaret({ cx, topY }: { cx: number; topY: number }) {
   return (
     <g>
-      <rect x={x - 5} y="110" width="10" height="75" />
-      <rect x={x - 8} y="110" width="16" height="4" rx="1" />
-      <rect x={x - 4} y="75" width="8" height="35" />
-      <rect x={x - 6} y="75" width="12" height="3" rx="1" />
-      <path d={`M ${x - 4} 75 L ${x} 52 L ${x + 4} 75 Z`} />
-      <line x1={x} y1="52" x2={x} y2="40" stroke="currentColor" strokeWidth="1.5" />
-      <use href="#crescent-finial" x={x} y="39" transform="scale(0.7)" />
+      <rect x={cx - 11} y={235} width={22} height={32} />
+      <polygon points={`${cx - 11},235 ${cx - 9},228 ${cx + 9},228 ${cx + 11},235`} />
+
+      {/* جذع سفلي */}
+      <rect x={cx - 8} y={178} width={16} height={50} />
+
+      {/* شرفة */}
+      <rect x={cx - 13} y={168} width={26} height={10} rx={1} />
+
+      {/* جذع علوي */}
+      <rect x={cx - 6} y={124} width={12} height={44} />
+
+      {/* شرفة علوية وجوسق */}
+      <rect x={cx - 9} y={118} width={18} height={6} rx={1} />
+      <rect x={cx - 5} y={96} width={10} height={22} />
+
+      {/* مخروط */}
+      <path d={`M ${cx - 5} 96 C ${cx - 3} 82 ${cx - 1} 70 ${cx} 64 C ${cx + 1} 70 ${cx + 3} 82 ${cx + 5} 96 Z`} />
     </g>
   );
 }
 
 /**
- * نخلة عربية أصيلة بانحناء طبيعي وسعف ناعم
+ * مئذنة نائية في خط الأفق (Distant Minaret)
  */
-function GracefulPalm({ x }: { x: number }) {
-  const isLeft = x < 720;
-  const lean = isLeft ? 12 : -12;
+function DistantMinaret({ cx, topY }: { cx: number; topY: number }) {
+  return (
+    <g>
+      <rect x={cx - 6} y={210} width={12} height={60} />
+      <rect x={cx - 9} y={204} width={18} height={6} rx={1} />
+      <rect x={cx - 5} y={150} width={10} height={54} />
+      <rect x={cx - 7} y={146} width={14} height={4} />
+      <rect x={cx - 4} y={124} width={8} height={22} />
+      <path d={`M ${cx - 4} 124 L ${cx} ${topY} L ${cx + 4} 124 Z`} />
+      <circle cx={cx} cy={topY - 3} r={1.5} />
+    </g>
+  );
+}
+
+/**
+ * نافذة مقوسة إسلامية مدببة (Pointed Horseshoe / Ogee Arch Window)
+ */
+function PointedArchWindow({
+  cx,
+  baseY,
+  width,
+  height,
+}: {
+  cx: number;
+  baseY: number;
+  width: number;
+  height: number;
+}) {
+  const hw = width / 2;
+  const apexY = baseY - height;
+  const springY = baseY - height * 0.55;
+
+  return (
+    <path
+      d={`M ${cx - hw} ${baseY} 
+          V ${springY} 
+          C ${cx - hw} ${springY - height * 0.22} ${cx - hw * 0.3} ${apexY + height * 0.05} ${cx} ${apexY} 
+          C ${cx + hw * 0.3} ${apexY + height * 0.05} ${cx + hw} ${springY - height * 0.22} ${cx + hw} ${springY} 
+          V ${baseY} Z`}
+    />
+  );
+}
+
+/**
+ * مسننات وشرفات معمارية إسلامية مستمرة (Crenellations / Merlons)
+ */
+function Crenellations({ startX, endX, y }: { startX: number; endX: number; y: number }) {
+  const toothWidth = 8;
+  const toothHeight = 6;
+  const gap = 6;
+  const step = toothWidth + gap;
+  const count = Math.floor((endX - startX) / step);
+
+  const rects = [];
+  for (let i = 0; i < count; i++) {
+    rects.push(
+      <rect
+        key={i}
+        x={startX + i * step + gap / 2}
+        y={y - toothHeight}
+        width={toothWidth}
+        height={toothHeight}
+        rx={0.5}
+      />
+    );
+  }
+  return <g>{rects}</g>;
+}
+
+/**
+ * جامور القبة الكبرى مع الهلال الذهبي الشريف
+ */
+function GrandDomeFinial({ cx, baseY }: { cx: number; baseY: number }) {
+  return (
+    <g fill="url(#goldFinial)">
+      {/* ساق الجامور */}
+      <rect x={cx - 1.5} y={baseY - 42} width={3} height={42} rx={1} />
+
+      {/* ثلاث تفاحات متدرجة الحجم (Traditional Jamour Spheres) */}
+      <circle cx={cx} cy={baseY - 10} r={4.2} />
+      <circle cx={cx} cy={baseY - 21} r={3.3} />
+      <circle cx={cx} cy={baseY - 30} r={2.4} />
+
+      {/* الهلال الشريف يعلو الجامور متجهاً للأعلى */}
+      <MinaretCrescent cx={cx} cy={baseY - 44} r={8.5} />
+    </g>
+  );
+}
+
+/**
+ * رأس مبسط للقباب المساندة
+ */
+function FinialSimple({ cx, baseY, height }: { cx: number; baseY: number; height: number }) {
+  return (
+    <g fill="url(#goldFinial)">
+      <rect x={cx - 1} y={baseY - height} width={2} height={height} />
+      <circle cx={cx} cy={baseY - height * 0.5} r={2} />
+      <circle cx={cx} cy={baseY - height} r={2.5} />
+    </g>
+  );
+}
+
+/**
+ * رأس قبة مع هلال
+ */
+function FinialWithCrescent({ cx, baseY, height }: { cx: number; baseY: number; height: number }) {
+  return (
+    <g fill="url(#goldFinial)">
+      <rect x={cx - 1} y={baseY - height} width={2} height={height} />
+      <circle cx={cx} cy={baseY - height * 0.4} r={2.2} />
+      <circle cx={cx} cy={baseY - height * 0.75} r={1.6} />
+      <MinaretCrescent cx={cx} cy={baseY - height - 4} r={4.5} />
+    </g>
+  );
+}
+
+/**
+ * هلال إسلامي نقي ودقيق هندسياً
+ */
+function MinaretCrescent({ cx, cy, r }: { cx: number; cy: number; r: number }) {
+  return (
+    <path
+      fill="url(#goldFinial)"
+      d={`M ${cx} ${cy - r}
+          A ${r} ${r} 0 1 0 ${cx} ${cy + r}
+          A ${r * 1.3} ${r * 1.3} 0 0 1 ${cx} ${cy - r} Z`}
+    />
+  );
+}
+
+/**
+ * نخلة عربية أنيقة ذات سعف منحني طبيعي
+ */
+function ArabianPalm({
+  cx,
+  baseY,
+  scale = 1,
+  flip = false,
+}: {
+  cx: number;
+  baseY: number;
+  scale?: number;
+  flip?: boolean;
+}) {
+  const dir = flip ? -1 : 1;
+  const crownY = baseY - 65 * scale;
+  const trunkX = cx + 8 * dir * scale;
 
   return (
     <g>
-      {/* جذع النخلة المنحني الطبيعي */}
+      {/* الجذع المقوس برشاقة */}
       <path
-        d={`M ${x} 245 C ${x + lean * 0.3} 210, ${x + lean * 0.8} 185, ${x + lean} 160`}
+        d={`M ${cx} ${baseY} 
+            C ${cx + 3 * dir} ${baseY - 25 * scale} ${cx + 6 * dir} ${baseY - 45 * scale} ${trunkX} ${crownY}`}
         fill="none"
         stroke="currentColor"
-        strokeWidth="4.5"
+        strokeWidth={3.5 * scale}
         strokeLinecap="round"
       />
 
-      {/* رأس وسعف النخلة المنحني بانسيابية طبيعية */}
-      <g transform={`translate(${x + lean}, 160)`}>
-        {/* سعف علوي */}
-        <path d="M 0 0 C -8 -20, -25 -28, -42 -22 C -26 -16, -12 -8, 0 0 Z" />
-        <path d="M 0 0 C 8 -20, 25 -28, 42 -22 C 26 -16, 12 -8, 0 0 Z" />
-
-        {/* سعف وسطي متهدل */}
-        <path d="M 0 0 C -15 -12, -35 -14, -48 -2 C -32 2, -16 -1, 0 0 Z" />
-        <path d="M 0 0 C 15 -12, 35 -14, 48 -2 C 32 2, 16 -1, 0 0 Z" />
-
-        {/* سعف سفلي منحدر */}
-        <path d="M 0 0 C -12 6, -28 12, -40 22 C -28 12, -14 4, 0 0 Z" />
-        <path d="M 0 0 C 12 6, 28 12, 40 22 C 28 12, 14 4, 0 0 Z" />
-      </g>
+      {/* سعفات النخلة السبع المنحنية بانسيابية */}
+      {/* سعفة علوية يمنى */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX + 16 * dir} ${crownY - 14} ${trunkX + 28 * dir} ${crownY - 8} ${trunkX + 34 * dir} ${crownY + 4}
+            C ${trunkX + 26 * dir} ${crownY - 3} ${trunkX + 14 * dir} ${crownY - 5} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة علوية يسرى */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX - 16 * dir} ${crownY - 14} ${trunkX - 28 * dir} ${crownY - 8} ${trunkX - 34 * dir} ${crownY + 4}
+            C ${trunkX - 26 * dir} ${crownY - 3} ${trunkX - 14 * dir} ${crownY - 5} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة وسطى يمنى متدلية */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX + 22 * dir} ${crownY - 6} ${trunkX + 36 * dir} ${crownY + 8} ${trunkX + 40 * dir} ${crownY + 24}
+            C ${trunkX + 30 * dir} ${crownY + 12} ${trunkX + 18 * dir} ${crownY + 4} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة وسطى يسرى متدلية */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX - 22 * dir} ${crownY - 6} ${trunkX - 36 * dir} ${crownY + 8} ${trunkX - 40 * dir} ${crownY + 24}
+            C ${trunkX - 30 * dir} ${crownY + 12} ${trunkX - 18 * dir} ${crownY + 4} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة سفلية يمنى */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX + 18 * dir} ${crownY + 8} ${trunkX + 28 * dir} ${crownY + 24} ${trunkX + 30 * dir} ${crownY + 36}
+            C ${trunkX + 22 * dir} ${crownY + 24} ${trunkX + 12 * dir} ${crownY + 14} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة سفلية يسرى */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX - 18 * dir} ${crownY + 8} ${trunkX - 28 * dir} ${crownY + 24} ${trunkX - 30 * dir} ${crownY + 36}
+            C ${trunkX - 22 * dir} ${crownY + 24} ${trunkX - 12 * dir} ${crownY + 14} ${trunkX} ${crownY} Z`}
+      />
+      {/* سعفة تاج رأسية */}
+      <path
+        d={`M ${trunkX} ${crownY} 
+            C ${trunkX - 4 * dir} ${crownY - 18} ${trunkX + 4 * dir} ${crownY - 26} ${trunkX + 2 * dir} ${crownY - 32}
+            C ${trunkX + 7 * dir} ${crownY - 22} ${trunkX + 3 * dir} ${crownY - 12} ${trunkX} ${crownY} Z`}
+      />
     </g>
   );
 }
