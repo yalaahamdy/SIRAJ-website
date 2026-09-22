@@ -372,16 +372,27 @@ function FinialWithCrescent({ cx, baseY, height }: { cx: number; baseY: number; 
 }
 
 /**
- * هلال إسلامي نقي ودقيق هندسياً
+ * هلال إسلامي نقي ودقيق هندسياً — مرسوم بدقة رياضية بدائرتين متداخلتين
+ * الدائرة الخارجية (fillCircle) ناقصاً الدائرة الداخلية (cutCircle) المنزاحة للأعلى
+ * مما يعطي هلالاً واضحاً يستقيم لأعلى دون أي انحراف جانبي
  */
 function MinaretCrescent({ cx, cy, r }: { cx: number; cy: number; r: number }) {
+  // الدائرة الداخلية مرفوعة بنسبة 40% من r لصنع فتحة الهلال
+  const innerOffset = r * 0.48;
+  const innerR = r * 0.88;
+  // نبني الهلال بـ clipPath: دائرة خارجية كاملة مطروح منها دائرة داخلية مرفوعة
+  // نستخدم even-odd fill rule بدلاً من clipPath للتوافق الكامل
+  const id = `crescent-${Math.round(cx)}-${Math.round(cy)}`;
   return (
-    <path
-      fill="url(#goldFinial)"
-      d={`M ${cx} ${cy - r}
-          A ${r} ${r} 0 1 0 ${cx} ${cy + r}
-          A ${r * 1.3} ${r * 1.3} 0 0 1 ${cx} ${cy - r} Z`}
-    />
+    <g>
+      <defs>
+        <mask id={id}>
+          <circle cx={cx} cy={cy} r={r} fill="white" />
+          <circle cx={cx} cy={cy - innerOffset} r={innerR} fill="black" />
+        </mask>
+      </defs>
+      <circle cx={cx} cy={cy} r={r} fill="url(#goldFinial)" mask={`url(#${id})`} />
+    </g>
   );
 }
 
